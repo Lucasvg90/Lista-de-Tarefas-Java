@@ -1,24 +1,28 @@
 package objeto;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Tarefa {
 
 
     private String nome, descricao;
-    private int prioridade, status, id, id_usuario;
+    private int id, id_usuario;
     private static int contador = 1;
+    private Prioridade prioridade;
+    private Status status;
+    private Pessoa responsavel;
 
-    public Tarefa(String nome, String descricao, int prioridade, int status, int id_usuario) {
+    public Tarefa(String nome, String descricao, Prioridade prioridade, Status status, Pessoa responsavel) {
         this.nome = nome;
         this.descricao = descricao;
         this.prioridade = prioridade;
         this.status = status;
-        this.id_usuario = id_usuario;
+        this.responsavel = responsavel;
         this.id = contador++;
     }
 
-    public static Tarefa criar(Scanner scan){
+    public static Tarefa criar(Scanner scan, ArrayList<Pessoa> pessoas){
 
         System.out.println("Informe o nome da tarefa: ");
         String nome = scan.nextLine();
@@ -32,10 +36,32 @@ public class Tarefa {
         System.out.println("Informe o status atual: 1- Pendente | 2- Concluído");
         int status = scan.nextInt();
 
-        System.out.println("Informe o ID da pessoa responsável:");
-        int id_usuario = scan.nextInt();
+        System.out.println("\n--- Pessoas disponíveis ---");
+        for (Pessoa p : pessoas) {
+            System.out.println("ID: " + p.getId() + " - " + p.getNome());
+        }
+        System.out.println("----------------------------");
 
-        return new Tarefa(nome, descricao, prioridade, status, id_usuario);
+        System.out.println("Informe o ID da pessoa responsável:");
+        int id_pessoa = scan.nextInt();
+        Pessoa pessoaEscolhida = buscarPessoaPorId(pessoas, id_pessoa);
+
+        if (pessoaEscolhida == null) {
+            System.out.println("ID inválido! A tarefa será criada sem responsável.");
+        }
+
+        return new Tarefa(nome, descricao, Prioridade.pegaPrioridade(prioridade), Status.pegaStatus(status), pessoaEscolhida);
+    }
+
+    private static Pessoa buscarPessoaPorId(ArrayList<Pessoa> pessoas, int idPessoa) {
+
+            for(Pessoa p : pessoas){
+                if(p.getId() == idPessoa){
+                    return p;
+                }
+            }
+            return null;
+
     }
 
     public String getNome() {
@@ -54,22 +80,6 @@ public class Tarefa {
         this.descricao = descricao;
     }
 
-    public int getPrioridade() {
-        return prioridade;
-    }
-
-    public void setPrioridade(int prioridade) {
-        this.prioridade = prioridade;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
     public int getId() {
         return id;
     }
@@ -84,11 +94,12 @@ public class Tarefa {
 
     @Override
     public String toString() {
+        String nomeResponsavel = (responsavel != null) ? responsavel.getNome() : "N/A";
         return "Id Tarefa:" + id + "\n" +
                 " Nome da tarefa: " + nome + "\n" +
                 " Descricao: " + descricao + "\n" +
-                " Prioridade: " + prioridade + "\n" +
-                " Status: " + status + "\n" +
-                " Responsável: " + id_usuario + "\n" + "\n";
+                " Prioridade: " + prioridade.getDescricao() + "\n" +
+                " Status: " + status.getDescricao() + "\n" +
+                " Responsável: " + nomeResponsavel + "\n" + "\n";
     }
 }
