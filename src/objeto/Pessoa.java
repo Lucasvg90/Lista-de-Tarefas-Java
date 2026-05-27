@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Pessoa {
 
     private String nome;
-    private int id;
+    private final int id;
     private static int contador = 1;
 
     public Pessoa(String nome, int id) {

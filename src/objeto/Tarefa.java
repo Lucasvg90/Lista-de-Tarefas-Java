@@ -7,7 +7,7 @@ public class Tarefa {
 
 
     private String nome, descricao;
-    private int id, id_usuario;
+    private final int id;
     private static int contador = 1;
     private Prioridade prioridade;
     private Status status;
@@ -82,14 +82,6 @@ public class Tarefa {
 
     public int getId() {
         return id;
-    }
-
-    public int getId_usuario() {
-        return id_usuario;
-    }
-
-    public void setId_usuario(int id_usuario) {
-        this.id_usuario = id_usuario;
     }
 
     @Override
