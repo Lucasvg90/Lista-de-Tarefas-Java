@@ -6,7 +6,7 @@ public class Pessoa {
 
     private String nome;
     private final int id;
-    private static int contador = 1;
+    private static int contador = 0;
 
     public Pessoa(String nome, int id) {
         this.nome = nome;
