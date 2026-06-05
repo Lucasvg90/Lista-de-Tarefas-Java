@@ -64,6 +64,36 @@ public class Tarefa {
 
     }
 
+    public static ArrayList<Tarefa> filtrarPrioridade(ArrayList<Tarefa> tarefas, Prioridade prioridade){
+        ArrayList<Tarefa> tarefasFiltradas = new ArrayList<>();
+        for(Tarefa t : tarefas){
+            if(t.getPrioridade() == prioridade){
+                tarefasFiltradas.add(t);
+            }
+        }
+        return tarefasFiltradas;
+    }
+
+    public static ArrayList<Tarefa> filtrarStatus(ArrayList<Tarefa> tarefas, Status status){
+        ArrayList<Tarefa> tarefasFiltradas = new ArrayList<>();
+        for(Tarefa t : tarefas){
+            if(t.getStatus() == status){
+                tarefasFiltradas.add(t);
+            }
+        }
+        return tarefasFiltradas;
+    }
+
+    public static ArrayList<Tarefa> filtrarPessoa(ArrayList<Tarefa> tarefas, Pessoa pessoa){
+        ArrayList<Tarefa> tarefasFiltradas = new ArrayList<>();
+        for(Tarefa t : tarefas){
+            if(t.getResponsavel() == pessoa){
+                tarefasFiltradas.add(t);
+            }
+        }
+        return tarefasFiltradas;
+    }
+
     public String getNome() {
         return nome;
     }
@@ -84,10 +114,26 @@ public class Tarefa {
         return id;
     }
 
+    public Prioridade getPrioridade() {
+        return prioridade;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public Pessoa getResponsavel() {
+        return responsavel;
+    }
+
+    public void setResponsavel(Pessoa responsavel) {
+        this.responsavel = responsavel;
+    }
+
     @Override
     public String toString() {
         String nomeResponsavel = (responsavel != null) ? responsavel.getNome() : "N/A";
-        return "Id Tarefa:" + id + "\n" +
+        return "Id Tarefa: " + id + "\n" +
                 " Nome da tarefa: " + nome + "\n" +
                 " Descricao: " + descricao + "\n" +
                 " Prioridade: " + prioridade.getDescricao() + "\n" +
