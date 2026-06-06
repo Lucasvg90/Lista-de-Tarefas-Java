@@ -2,7 +2,8 @@ package objeto;
 
 public enum Status {
     PENDENTE(1, "Pendente"),
-    CONCLUIDO(2, "Concluído");
+    CONCLUIDO(2, "Concluído"),
+    ATRASADO(3, "Atrasado");
 
     private final int codigo;
     private final String descricao;

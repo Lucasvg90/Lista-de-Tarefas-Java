@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 public class Tarefa {
 
-
     private String nome, descricao;
     private final int id;
     private static int contador = 1;
@@ -22,7 +21,7 @@ public class Tarefa {
         this.id = contador++;
     }
 
-    public static Tarefa criar(Scanner scan, ArrayList<Pessoa> pessoas){
+    public static Tarefa criar(Scanner scan, ArrayList<Pessoa> pessoas) {
 
         System.out.println("Informe o nome da tarefa: ");
         String nome = scan.nextLine();
@@ -33,7 +32,7 @@ public class Tarefa {
         System.out.println("Defina o nível de prioridade: 1- Baixa | 2- Média | 3- Alta | 4- Urgente");
         int prioridade = scan.nextInt();
 
-        System.out.println("Informe o status atual: 1- Pendente | 2- Concluído");
+        System.out.println("Informe o status atual: 1- Pendente | 2- Concluído | 3- Atrasado");
         int status = scan.nextInt();
 
         System.out.println("\n--- Pessoas disponíveis ---");
@@ -42,52 +41,71 @@ public class Tarefa {
         }
         System.out.println("----------------------------");
 
-        System.out.println("Informe o ID da pessoa responsável:");
-        int id_pessoa = scan.nextInt();
-        Pessoa pessoaEscolhida = buscarPessoaPorId(pessoas, id_pessoa);
-
-        if (pessoaEscolhida == null) {
-            System.out.println("ID inválido! A tarefa será criada sem responsável.");
+        System.out.println("Informe o ID ou o Nome da pessoa responsável:");
+        String entradaPessoa = "";
+        while (entradaPessoa.isEmpty()) {
+            entradaPessoa = scan.nextLine().trim();
+        }
+        Pessoa pessoaEscolhida = null;
+        try {
+            int id_pessoa = Integer.parseInt(entradaPessoa);
+            pessoaEscolhida = buscarPessoaPorId(pessoas, id_pessoa);
+        } catch (NumberFormatException e) {
+            pessoaEscolhida = buscarPessoaPorNome(pessoas, entradaPessoa);
         }
 
-        return new Tarefa(nome, descricao, Prioridade.pegaPrioridade(prioridade), Status.pegaStatus(status), pessoaEscolhida);
+        if (pessoaEscolhida == null) {
+            System.out.println("Pessoa não encontrada! A tarefa será criada sem responsável.");
+        }
+
+        return new Tarefa(nome, descricao, Prioridade.pegaPrioridade(prioridade), Status.pegaStatus(status),
+                pessoaEscolhida);
     }
 
     private static Pessoa buscarPessoaPorId(ArrayList<Pessoa> pessoas, int idPessoa) {
 
-            for(Pessoa p : pessoas){
-                if(p.getId() == idPessoa){
-                    return p;
-                }
+        for (Pessoa p : pessoas) {
+            if (p.getId() == idPessoa) {
+                return p;
             }
-            return null;
+        }
+        return null;
 
     }
 
-    public static ArrayList<Tarefa> filtrarPrioridade(ArrayList<Tarefa> tarefas, Prioridade prioridade){
+    private static Pessoa buscarPessoaPorNome(ArrayList<Pessoa> pessoas, String nome) {
+        for (Pessoa p : pessoas) {
+            if (p.getNome().equalsIgnoreCase(nome)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public static ArrayList<Tarefa> filtrarPrioridade(ArrayList<Tarefa> tarefas, Prioridade prioridade) {
         ArrayList<Tarefa> tarefasFiltradas = new ArrayList<>();
-        for(Tarefa t : tarefas){
-            if(t.getPrioridade() == prioridade){
+        for (Tarefa t : tarefas) {
+            if (t.getPrioridade() == prioridade) {
                 tarefasFiltradas.add(t);
             }
         }
         return tarefasFiltradas;
     }
 
-    public static ArrayList<Tarefa> filtrarStatus(ArrayList<Tarefa> tarefas, Status status){
+    public static ArrayList<Tarefa> filtrarStatus(ArrayList<Tarefa> tarefas, Status status) {
         ArrayList<Tarefa> tarefasFiltradas = new ArrayList<>();
-        for(Tarefa t : tarefas){
-            if(t.getStatus() == status){
+        for (Tarefa t : tarefas) {
+            if (t.getStatus() == status) {
                 tarefasFiltradas.add(t);
             }
         }
         return tarefasFiltradas;
     }
 
-    public static ArrayList<Tarefa> filtrarPessoa(ArrayList<Tarefa> tarefas, Pessoa pessoa){
+    public static ArrayList<Tarefa> filtrarPessoa(ArrayList<Tarefa> tarefas, Pessoa pessoa) {
         ArrayList<Tarefa> tarefasFiltradas = new ArrayList<>();
-        for(Tarefa t : tarefas){
-            if(t.getResponsavel() == pessoa){
+        for (Tarefa t : tarefas) {
+            if (t.getResponsavel() == pessoa) {
                 tarefasFiltradas.add(t);
             }
         }

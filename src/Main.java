@@ -6,11 +6,19 @@ import objeto.Tarefa;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
 public class Main {
     private static Pessoa buscarPessoaPorId(ArrayList<Pessoa> pessoas, int id) {
         for (Pessoa p : pessoas) {
             if (p.getId() == id) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    private static Pessoa buscarPessoaPorNome(ArrayList<Pessoa> pessoas, String nome) {
+        for (Pessoa p : pessoas) {
+            if (p.getNome().equalsIgnoreCase(nome)) {
                 return p;
             }
         }
@@ -25,14 +33,16 @@ public class Main {
         System.out.println("Bem vindo ao TermTo-Do!\n");
 
         while (true) {
-            System.out.println("Por favor, escolha sua ação!\n1 - Criar tarefa\n2 - Listar todas as tarefas\n3 - Filtrar tarefas\n4 - Adicionar Pessoas\n5 - Sair");
+            System.out.println(
+                    "Por favor, escolha sua ação!\n1 - Criar tarefa\n2 - Listar todas as tarefas\n3 - Filtrar tarefas\n4 - Adicionar Pessoas\n5 - Sair");
             int escolha = scan.nextInt();
             scan.nextLine();
 
             switch (escolha) {
                 case 1:
                     if (pessoas.isEmpty()) {
-                        System.out.println("Atenção! Nenhuma pessoa cadastrada. Cadastre uma pessoa primeiro (opção 4).\n");
+                        System.out.println(
+                                "Atenção! Nenhuma pessoa cadastrada. Cadastre uma pessoa primeiro (opção 4).\n");
                         break;
                     }
                     System.out.println("-----Criar tarefa-----");
@@ -61,19 +71,21 @@ public class Main {
                     System.out.println("1 - Prioridade\n2 - Status\n3 - Pessoa");
 
                     int tipo = scan.nextInt();
+                    scan.nextLine();
 
                     ArrayList<Tarefa> tarefasFiltradas = new ArrayList<>();
 
                     switch (tipo) {
                         case 1:
-                            System.out.println("Escolha a prioridade desejada: \n1 - Baixa\n2 - Média\n3 - Alta\n4 - Urgente");
+                            System.out.println(
+                                    "Escolha a prioridade desejada: \n1 - Baixa\n2 - Média\n3 - Alta\n4 - Urgente");
                             int priori = scan.nextInt();
                             scan.nextLine();
                             tarefasFiltradas = Tarefa.filtrarPrioridade(tarefas, Prioridade.pegaPrioridade(priori));
                             break;
 
                         case 2:
-                            System.out.println("Escolha o status: \n1 - Pendente\n2 - Concluído");
+                            System.out.println("Escolha o status: \n1 - Pendente\n2 - Concluído - \n3 - Atrasado");
                             int status = scan.nextInt();
                             tarefasFiltradas = Tarefa.filtrarStatus(tarefas, Status.pegaStatus(status));
                             break;
@@ -84,36 +96,42 @@ public class Main {
                                 System.out.println("ID: " + p.getId() + " - " + p.getNome());
                             }
                             System.out.println("----------------------------");
-                            System.out.println("Informe o ID da pessoa:");
-                            int idPessoa = scan.nextInt();
-                            Pessoa pessoaBuscada = buscarPessoaPorId(pessoas, idPessoa);
+                            System.out.println("Informe o ID ou o Nome da pessoa:");
+                            String entrada = scan.nextLine().trim();
+                            Pessoa pessoaBuscada = null;
+                            try {
+                                int idPessoa = Integer.parseInt(entrada);
+                                pessoaBuscada = buscarPessoaPorId(pessoas, idPessoa);
+                            } catch (NumberFormatException e) {
+                                pessoaBuscada = buscarPessoaPorNome(pessoas, entrada);
+                            }
                             if (pessoaBuscada != null) {
                                 tarefasFiltradas = Tarefa.filtrarPessoa(tarefas, pessoaBuscada);
+                            } else {
+                                System.out.println("Pessoa não encontrada.");
                             }
                             break;
                     }
 
                     if (tarefasFiltradas.isEmpty()) {
-                        System.out.println("Nenhuma tarefa encontrada, man");
+                        System.out.println("Nenhuma tarefa encontrada");
                     } else {
-                        for(Tarefa t: tarefasFiltradas){
+                        for (Tarefa t : tarefasFiltradas) {
                             System.out.println(t.toString());
                         }
                     }
                     break;
 
-                        case 4:
-                            System.out.println("-----Adicionar Pessoa-----");
-                            Pessoa novaPessoa = Pessoa.adicionar(scan);
-                            pessoas.add(novaPessoa);
-                            break;
-                        case 5:
-                            System.out.println("Saindo...");
-                            return;
-                        default:
-                            System.out.println("Tecla inválida, meu fi \nDigite novamente.");
-
-
+                case 4:
+                    System.out.println("-----Adicionar Pessoa-----");
+                    Pessoa novaPessoa = Pessoa.adicionar(scan);
+                    pessoas.add(novaPessoa);
+                    break;
+                case 5:
+                    System.out.println("Saindo...");
+                    return;
+                default:
+                    System.out.println("Tecla inválida, meu fi \nDigite novamente.");
 
             }
 
@@ -121,4 +139,3 @@ public class Main {
 
     }
 }
-
